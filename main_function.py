@@ -9,7 +9,7 @@ values = ["actor"]
 
 json_raw = []
 
-for year in range(2000,2005):
+for year in range(1980,2015):
     json_raw.extend(process_csv(f"data/years/{year}", headers))
 
 json_filtered = json_filter(json_raw, keys)
@@ -43,6 +43,12 @@ for entry in json_filtered:
             if occupation not in Occupation_g:
                 if occupation in entry["title"].lower():
                     Occupation_g.append(occupation) 
+
+for entry in json_filtered:
+    if "actor" in entry["Occupation_g"]:
+        entry["Actor"]='TRUE'
+    if "politician" in entry["Occupation_g"]: 
+        entry["Politician"]='TRUE'
 
 with open("json_test.json",'w') as file:
     json.dump(json_filtered, file, indent=4)

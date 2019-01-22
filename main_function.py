@@ -1,6 +1,7 @@
 from analysis_func import json_filter
 from csvConverter import read_header, process_csv
 import json
+import csv
 
 headers = read_header("h.txt")
 
@@ -44,11 +45,31 @@ for entry in json_filtered:
                 if occupation in entry["title"].lower():
                     Occupation_g.append(occupation) 
 
-for entry in json_filtered:
-    if "actor" in entry["Occupation_g"]:
-        entry["Actor"]='TRUE'
-    if "politician" in entry["Occupation_g"]: 
-        entry["Politician"]='TRUE'
-
 with open("json_test.json",'w') as file:
     json.dump(json_filtered, file, indent=4)
+
+
+#selecting actors and politicians 
+for entry in json_filtered:
+    entry["Actor"]="actor" in entry["Occupation_g"]
+    entry["Politician"]="politician" in entry["Occupation_g"]
+
+actorsandpoliticians = []
+for entry in json_filtered:
+    if entry["Politician"]==True:
+        actorsandpoliticians.append(entry)
+    elif entry["Actor"]==True:
+        actorsandpoliticians.append(entry)    
+
+
+header = []
+for person in actorsandpoliticians:
+    for key in person.keys():
+        if key not in header: 
+            header.append(key)
+
+with open("actors_politicians.csv", 'w') as file:
+    writer = csv.DictWriter(file, fieldnames=header, lineterminator='\n', delimiter=',')
+    writer.writeheader()
+    for person in actorsandpoliticians:
+        writer.writerow(person)

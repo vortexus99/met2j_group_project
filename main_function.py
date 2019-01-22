@@ -10,7 +10,7 @@ values = ["actor"]
 
 json_raw = []
 
-for year in range(1980,2015):
+for year in range(1900,1950):
     json_raw.extend(process_csv(f"data/years/{year}", headers))
 
 json_filtered = json_filter(json_raw, keys)
@@ -25,8 +25,8 @@ for indx, entry in enumerate(test):
 
 print(counter)'''
 
-occupations = ["actor", "politician", "athlete", "musician", "sing", "songwriter", "prince"]
-
+#making a variable for occupation in the filtered json
+occupations = ["actor", "politician", "athlete", "musician", "sing", "songwriter", "prince", "senator", "president"]
 
 for entry in json_filtered:
     Occupation_g = []
@@ -45,15 +45,16 @@ for entry in json_filtered:
                 if occupation in entry["title"].lower():
                     Occupation_g.append(occupation) 
 
-with open("json_test.json",'w') as file:
-    json.dump(json_filtered, file, indent=4)
-
 
 #selecting actors and politicians 
 for entry in json_filtered:
     entry["Actor"]="actor" in entry["Occupation_g"]
-    entry["Politician"]="politician" in entry["Occupation_g"]
+    entry["Politician"]="politician" in entry["Occupation_g"] or "president" in entry["Occupation_g"]
 
+with open("json_test.json",'w') as file:
+    json.dump(json_filtered, file, indent=4)
+
+#making list of all actors and politicians
 actorsandpoliticians = []
 for entry in json_filtered:
     if entry["Politician"]==True:
@@ -61,14 +62,14 @@ for entry in json_filtered:
     elif entry["Actor"]==True:
         actorsandpoliticians.append(entry)    
 
-
+#writing actors politicians into csv
 header = []
 for person in actorsandpoliticians:
     for key in person.keys():
         if key not in header: 
             header.append(key)
 
-with open("actors_politicians.csv", 'w') as file:
+with open("actors_politicians_1900_1950.csv", 'w') as file:
     writer = csv.DictWriter(file, fieldnames=header, lineterminator='\n', delimiter=',')
     writer.writeheader()
     for person in actorsandpoliticians:

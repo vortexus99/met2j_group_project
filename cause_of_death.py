@@ -12,7 +12,7 @@ keys = ["rdf-schema#label","deathDate","birthDate","birthYear","occupation","occ
 json_raw = []
 
 #Here we enter the range of years 
-for year in range(1900,1950):
+for year in range(1950,1980):
     json_raw.extend(process_csv(f"data/years/{year}", headers))
 
 json_filtered = json_filter(json_raw, keys)
@@ -150,7 +150,6 @@ for person in actorspoliticiansathletes:
             if suicide in person["deathCause_label"].lower() and suicide not in person["deathCause"]:
                 person["Cause_of_Death_cat"] = "Suicide"
 
-
 #making a json with all entries containing a key for cause of death
 deathcauses = []
 for person in actorspoliticiansathletes: 
@@ -171,7 +170,7 @@ for person in actorspoliticiansathletes:
         if key not in header: 
             header.append(key)
 #writing the csv
-with open("met2j_group_project/act_pol_ath_1900_1950_death_cause.csv", 'w') as file:
+with open("met2j_group_project/act_pol_ath_1950_1980_death_cause.csv", 'w') as file:
     writer = csv.DictWriter(file, fieldnames=header, lineterminator='\n', delimiter=',')
     writer.writeheader()
     for person in actorspoliticiansathletes:

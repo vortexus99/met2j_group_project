@@ -4,6 +4,7 @@ install.packages('dplyr')
 library('tidyverse')  #import package
 library('plotly')
 library('dplyr')
+library('RColorBrewer')
 
 #import data
 pol_act_ath_raw <- read.csv('act_pol_ath_1900_1950_death_cause.csv', stringsAsFactors = FALSE)
@@ -57,7 +58,7 @@ bound_data <- bind_rows(actor_new, athlete_new, politician_new)
 
 #Plot for different causes of death 
 violin <- bound_data %>%
-  filter(Cause_of_Death_cat in c("Unknown", "Disease", "Crime")) %>%
+  filter(Cause_of_Death_cat == c("Unknown", "Disease", "Crime")) %>%
   plot_ly(
     x= ~occupation_new,
     y= ~death_age,
@@ -84,5 +85,8 @@ violin <- bound_data %>%
 ggplotly(violin)
 
 ggplot(data=bound_data) + 
-  geom_bar(aes(x=occupation_new, fill=Cause_of_Death_cat), stat='identity')
+  geom_bar(aes(x=occupation_new, fill=Cause_of_Death_cat), stat='count', position = 'stack') +
+  theme_classic() + 
+  scale_fill_brewer() + 
+  labs(x='Occupation', y='Count', fill='Cause of Death')
 

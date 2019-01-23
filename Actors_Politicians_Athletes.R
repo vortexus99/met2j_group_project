@@ -1,9 +1,11 @@
 install.packages('plotly')
 install.packages('dplyr')
-
+install.packages("wesanderson")
+library('wesanderson')
 library('tidyverse')  #import package
 library('plotly')
 library('dplyr')
+library('RColorBrewer')
 
 #import data
 pol_act_ath_raw <- read.csv('D:/UCU/Labs/Intro to Data/met2j_group_project/actors_politicians_athletes_1900_1950.csv', stringsAsFactors = FALSE)
@@ -54,11 +56,15 @@ ggplotly(violinplots)
 #to calcualte exact average age of death
 occupations_barplot <- c('Actor', 'Athlete', 'Politician')
 average_death_barplot <- c(mean(actor$death_age), mean(athlete$death_age), mean(politician$death_age))
-averages_for_barplot <- data.frame(occupation = occupations_barplot, average_death_age = average_death_barplot)
+sd_death_barplot <- c(sd(actor$death_age), c(sd(athlete$death_age), c(sd(politician$death_age))))
+averages_for_barplot <- data.frame(occupation = occupations_barplot, average_death_age = average_death_barplot, standard_deviation = sd_death_barplot)
 
-ggplot(data = averages_for_barplot) +
-  geom_col(mapping=aes(x=occupation, y=average_death_age, fill=occupation)) +
-  coord_cartesian(ylim = c(60, 80)) +
+ggplot(data = averages_for_barplot, aes(x=occupation, y=average_death_age, fill=occupation)) +
+  geom_col() +
+  geom_errorbar(aes(ymin=average_death_age-sd_death_barplot, ymax=average_death_age+sd_death_barplot), width=.2, position=position_dodge(.9)) +
+  #coord_cartesian(ylim = c(60, 80)) +
   ggtitle("Average Age of Death per Occupation") +
-  xlab("Occupation") + ylab("Average age of death")
-
+  theme_minimal() + 
+  theme(legend.position = 'none', plot.title = element_text(hjust = 0.5)) + 
+  xlab("Occupation") + ylab("Average age of death") +
+  scale_fill_manual(values = wes_palette(n=3, name="GrandBudapest2")) 

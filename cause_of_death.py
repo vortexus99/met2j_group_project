@@ -12,7 +12,7 @@ keys = ["rdf-schema#label","deathDate","birthDate","birthYear","occupation","occ
 json_raw = []
 
 #Here we enter the range of years 
-for year in range(1950,1980):
+for year in range(1900,1950):
     json_raw.extend(process_csv(f"data/years/{year}", headers))
 
 json_filtered = json_filter(json_raw, keys)
@@ -20,6 +20,9 @@ json_filtered = json_filter(json_raw, keys)
 #making a variable for occupation in the filtered json
 #the occupations we want to look for
 occupations = ["actor", "politician", "athlete", "musician", "sing", "songwriter", "prince", "senator"]
+athletes = ["player", "ball", "swimmer", "gymnist", "dancer", "cycl", "race", "sports"]
+politics = ["senator", "parliament", "government", "politician"]
+
 #we look through the different variables that could contain the occupation
 #and make them into one variable 
 for entry in json_filtered:
@@ -34,12 +37,31 @@ for entry in json_filtered:
             Occupation_g.append(occupation) 
         if "rdf-schema#label" in entry and occupation in entry["rdf-schema#label"].lower() and occupation not in Occupation_g:
             Occupation_g.append(occupation) 
+    for element in athletes: 
+        if "occupation_label" in entry and "athlete" not in Occupation_g and element in entry["occupation_label"].lower():
+            Occupation_g.append("athlete") 
+        if "occupation" in entry and element in entry["occupation"].lower() and "athlete" not in Occupation_g:
+            Occupation_g.append("athlete") 
+        if "title" in entry and "athlete" not in Occupation_g and element in entry["title"].lower():
+            Occupation_g.append("athlete") 
+        if "rdf-schema#label" in entry and element in entry["rdf-schema#label"].lower() and "athlete" not in Occupation_g:
+            Occupation_g.append("athlete") 
+    for element in politics: 
+        if "occupation_label" in entry and "politician" not in Occupation_g and element in entry["occupation_label"].lower():
+            Occupation_g.append("politician") 
+        if "occupation" in entry and element in entry["occupation"].lower() and "politician" not in Occupation_g:
+            Occupation_g.append("athlete") 
+        if "title" in entry and "politician" not in Occupation_g and element in entry["title"].lower():
+            Occupation_g.append("politician") 
+        if "rdf-schema#label" in entry and element in entry["rdf-schema#label"].lower() and "politician" not in Occupation_g:
+            Occupation_g.append("politician") 
+
 
 #selecting actors athletes and politicians 
 for entry in json_filtered:
     entry["Actor"]="actor" in entry["Occupation_g"]
     entry["Politician"]="politician" in entry["Occupation_g"]
-    entry["Athlete"]="athlete" in entry["Occupation_g"]
+    entry["Athlete"]=element in entry["Occupation_g"]
 
 with open("json_test.json",'w') as file:
     json.dump(json_filtered, file, indent=4)
@@ -170,7 +192,7 @@ for person in actorspoliticiansathletes:
         if key not in header: 
             header.append(key)
 #writing the csv
-with open("met2j_group_project/act_pol_ath_1950_1980_death_cause.csv", 'w') as file:
+with open("met2j_group_project/act_pol_ath_1900_1950_death_cause.csv", 'w') as file:
     writer = csv.DictWriter(file, fieldnames=header, lineterminator='\n', delimiter=',')
     writer.writeheader()
     for person in actorspoliticiansathletes:

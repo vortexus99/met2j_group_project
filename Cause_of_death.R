@@ -1,6 +1,6 @@
 install.packages('plotly')
 install.packages('dplyr')
-
+library('wesanderson')
 library('tidyverse')  #import package
 library('plotly')
 library('dplyr')
@@ -84,9 +84,23 @@ violin <- bound_data %>%
 
 ggplotly(violin)
 
+#barplot of all causes of death per occupation 
 ggplot(data=bound_data) + 
   geom_bar(aes(x=occupation_new, fill=Cause_of_Death_cat), stat='count', position = 'stack') +
   theme_classic() + 
-  scale_fill_brewer() + 
+  scale_fill_manual(values=c("#CC3300", "#33FFCC", "#FF66CC", "#E69F00", "#999999")) + 
   labs(x='Occupation', y='Count', fill='Cause of Death')
 
+#lineplot excluding Unknown cause of death
+ggplot(subset (bound_data, Cause_of_Death_cat %in% c("Crime", "Disease", "Suicide"))) + 
+  geom_line(aes(x=birthYear, color=Cause_of_Death_cat), stat='count') +
+  theme_classic() + 
+  scale_colour_brewer("Colors in Set2", palette="Set2") + 
+  labs(x='Birthyear', y='Count', color='Cause of Death', linetype='Occupation') + 
+  facet_grid(occupation_new~.)
+#and as a barplot 
+ggplot(subset (bound_data, Cause_of_Death_cat %in% c("Crime", "Disease", "Suicide"))) + 
+  geom_bar(aes(x=occupation_new, fill=Cause_of_Death_cat), stat='count', position = 'stack') +
+  theme_classic() + 
+  scale_fill_manual(values=c("#CC3300", "#33FFCC", "#FF66CC", "#E69F00", "#999999")) + 
+  labs(x='Occupation', y='Count', fill='Cause of Death')

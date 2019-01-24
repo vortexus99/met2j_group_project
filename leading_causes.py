@@ -17,8 +17,6 @@ for year in range(1900,1950):
 
 json_filtered = json_filter(json_raw, keys)
 
-#making a variable for occupation in the filtered json
-#the occupations we want to look for
 occupations = ["actor", "politician", "athlete", "musician", "sing", "songwriter", "prince", "senator"]
 athletes = ["player", "ball", "swimmer", "gymnist", "dancer", "cycl", "race", "sports"]
 politics = ["senator", "parliament", "government", "politician"]
@@ -95,95 +93,50 @@ for person in actorspoliticiansathletes:
 print(f'amount of actors, politicians, and athletes with death cause listed: {counteractpolath}')
 
 
-#Exploration of death causes 
+#Leading causes of death 
+#heart disease, cancer, stroke, accident, influenza/pneumonia 
 #lists of keywords to look for: 
-diseases = ["cancer", "disease", "illness", "infection", "heart", "infarction", "stroke", "aneurysm", "leukemia", "pneumonia", "occlusion", "failure", "hemorrhage", "asphyxia", "pyelonephritis", "myasthenia gravis", "aids"]
-crimes = ["drug", "murder", "shoot", "shot", "knife", "stab", "crime", "gang", "violen", "holocaust", "attack"]
-natural = ["natural", "old", "age"]
-suicides = ["suicide", "overdose"]
-#counters for each category
-diseasescounter = 0 
-crimecounter = 0 
-naturalcounter = 0
-suicidecounter = 0 
-for person in actorspoliticiansathletes: 
-    #counting in the key deathCause
-    if "deathCause" in person: 
-        for disease in diseases: 
-            if disease in person["deathCause"].lower():
-                diseasescounter += 1
-        for crime in crimes:
-            if crime in person["deathCause"].lower():
-                crimecounter += 1
-        for nature in natural:
-            if nature in person["deathCause"].lower():
-                naturalcounter += 1
-        for suicide in suicides:
-            if suicide in person["deathCause"].lower():
-                suicidecounter += 1
-    #counting in the key deathCause_label, if not already found in deathCause
-    if "deathCause_label" in person: 
-        for disease in diseases: 
-            if disease in person["deathCause_label"].lower() and disease not in person["deathCause"]:
-                diseasescounter += 1
-        for crime in crimes:
-            if crime in person["deathCause_label"].lower() and crime not in person["deathCause"]:
-                crimecounter += 1
-        for nature in natural:
-            if nature in person["deathCause_label"].lower() and nature not in person["deathCause"]:
-                naturalcounter += 1
-        for suicide in suicides: 
-            if suicide in person["deathCause_label"].lower() and suicide not in person["deathCause"]:
-                suicidecounter += 1
-#printing results
-print(f'diseases: {diseasescounter}')
-print(f'crimes: {crimecounter}')
-print(f'natural deaths: {crimecounter}')
-print(f'suicides: {crimecounter}')
+#counting in the key deathCause_label, if not already found in deathCause
 
-#Making death causes into categories
+#Making leading death causes into categories
 for person in actorspoliticiansathletes: 
     #searching in the key deathCause
-    if "deathCause" in person: 
-        for disease in diseases: 
-            if disease in person["deathCause"].lower():
-                person["Cause_of_Death_cat"] = "Disease"
-        for crime in crimes:
-            if crime in person["deathCause"].lower():
-                person["Cause_of_Death_cat"] = "Crime"
-        for nature in natural:
-            if nature in person["deathCause"].lower():
-                person["Cause_of_Death_cat"] = "Natural"
-        for suicide in suicides:
-            if suicide in person["deathCause"].lower():
-                person["Cause_of_Death_cat"] = "Suicide"
+    if "deathCause" in person:
+        if "heart" in person["deathCause"].lower():
+            person["Cause_of_Death_cat"] = "Heart disease"
+        if "cancer" in person["deathCause"].lower():
+            person["Cause_of_Death_cat"] = "Cancer"
+        if "stroke" in person["deathCause"].lower():
+            person["Cause_of_Death_cat"] = "Stroke"
+        if "accident" in person["deathCause"].lower():
+            person["Cause_of_Death_cat"] = "Accident"
+        if "influenza" in person["deathCause"].lower() or "pneumonia" in person["deathCause"].lower():
+            person["Cause_of_Death_cat"] = "Influenza/Pneumonia"
     #counting in the key deathCause_label, if not already found in deathCause
     if "deathCause_label" in person: 
-        for disease in diseases: 
-            if disease in person["deathCause_label"].lower() and disease not in person["deathCause"]:
-                person["Cause_of_Death_cat"] = "Disease"
-        for crime in crimes:
-            if crime in person["deathCause_label"].lower() and crime not in person["deathCause"]:
-                person["Cause_of_Death_cat"] = "Crime"
-        for nature in natural:
-            if nature in person["deathCause_label"].lower() and nature not in person["deathCause"]:
-                person["Cause_of_Death_cat"] = "Natural"
-        for suicide in suicides: 
-            if suicide in person["deathCause_label"].lower() and suicide not in person["deathCause"]:
-                person["Cause_of_Death_cat"] = "Suicide"
+        if "heart" in person["deathCause"].lower() and "heart" not in person["deathCause"]:
+            person["Cause_of_Death_cat"] = "Heart disease"
+        if "cancer" in person["deathCause_label"].lower() and "cancer" not in person["deathCause"]:
+            person["Cause_of_Death_cat"] = "Cancer"
+        if "stroke" in person["deathCause_label"].lower() and "stroke" not in person["deathCause"]:
+            person["Cause_of_Death_cat"] = "Stroke"
+        if "accident" in person["deathCause_label"].lower() and "accident" not in person["deathCause"]:
+            person["Cause_of_Death_cat"] = "Accident"
+        if "influenza" in person["deathCause"].lower() or "pneumonia" in person["deathCause"].lower() and "influenze" not in person["deathCause"] and "pneumonia" not in person["deathCause"]:
+            person["Cause_of_Death_cat"] = "Influenza/Pneumonia"
     if "Cause_of_Death_cat" not in person: 
         person["Cause_of_Death_cat"] = "Unknown"
 
 #making a json with all entries containing a key for cause of death
-deathcauses = []
+leading_deathcauses = []
 for person in actorspoliticiansathletes: 
     if "deathCause" in person: 
-        deathcauses.append(person)
+        leading_deathcauses.append(person)
     if "deathCause_label" in person and "deathCause" not in person:
-        deathcauses.append(person)
+        leading_deathcauses.append(person)
 
-with open ('deathcauses.json', 'w') as file:
-    json.dump(deathcauses, file, indent=4)
+with open ('leading_deathcauses.json', 'w') as file:
+    json.dump(leading_deathcauses, file, indent=4)
 
 
 #writing actors politicians athletes with cause of death into csv
@@ -194,7 +147,7 @@ for person in actorspoliticiansathletes:
         if key not in header: 
             header.append(key)
 #writing the csv
-with open("met2j_group_project/act_pol_ath_1900_1950_death_cause.csv", 'w') as file:
+with open("met2j_group_project/act_pol_ath_00-50_leading_causes.csv", 'w') as file:
     writer = csv.DictWriter(file, fieldnames=header, lineterminator='\n', delimiter=',')
     writer.writeheader()
     for person in actorspoliticiansathletes:

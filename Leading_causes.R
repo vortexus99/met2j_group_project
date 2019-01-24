@@ -7,7 +7,7 @@ library('dplyr')
 library('RColorBrewer')
 
 #import data
-pol_act_ath_raw <- read.csv('act_pol_ath_1900_1950_death_cause.csv', stringsAsFactors = FALSE)
+pol_act_ath_raw <- read.csv('act_pol_ath_00-50_leading_causes.csv', stringsAsFactors = FALSE)
 
 #make new dataframe so we don't change anything in raw
 pol_act_ath_date <- pol_act_ath_raw
@@ -56,7 +56,7 @@ politician_new <- politician %>%
 
 bound_data <- bind_rows(actor_new, athlete_new, politician_new)
 
-#Plot for different causes of death 
+#Violin plot for different causes of death 
 violin <- bound_data %>%
   filter(Cause_of_Death_cat == c("Unknown", "Disease", "Crime")) %>%
   plot_ly(
@@ -88,7 +88,7 @@ ggplotly(violin)
 ggplot(data=bound_data) + 
   geom_bar(aes(x=occupation_new, fill=Cause_of_Death_cat), stat='count', position = 'stack') +
   theme_classic() + 
-  scale_fill_manual(values=c("#CC3300", "#33FFCC", "#FF66CC", "#E69F00", "#999999")) + 
+  scale_fill_manual(values=c("#CC3300", "#33FFCC", "#FF66CC", "#E69F00", "#6666FF", "#999999")) + 
   labs(x='Occupation', y='Count', fill='Cause of Death')
 
 #lineplot excluding Unknown cause of death
@@ -99,8 +99,8 @@ ggplot(subset (bound_data, Cause_of_Death_cat %in% c("Crime", "Disease", "Suicid
   labs(x='Birthyear', y='Count', color='Cause of Death', linetype='Occupation') + 
   facet_grid(occupation_new~.)
 #and as a barplot 
-ggplot(subset (bound_data, Cause_of_Death_cat %in% c("Crime", "Suicide", "Disease", "Natural"))) + 
+ggplot(subset (bound_data, Cause_of_Death_cat %in% c("Accident", "Cancer", "Stroke", "Heart disease", "Influenza/Pneumonia"))) + 
   geom_bar(aes(x=occupation_new, fill=Cause_of_Death_cat), stat='count', position = 'stack') +
   theme_classic() + 
-  scale_fill_manual(values=c("#CC3300", "#33FFCC", "#FF66CC", "#E69F00", "#999999")) + 
+  scale_fill_manual(values=c("#CC3300", "#33FFCC", "#FF66CC", "#E69F00", "#6666FF")) + 
   labs(x='Occupation', y='Count', fill='Cause of Death')

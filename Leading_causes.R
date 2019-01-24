@@ -35,7 +35,7 @@ updated_pol_act_ath_death_age <- subset(pol_act_ath_death_age, death_age>0)
 
 #make new datasets with actors, politicians, athletes or business people (if two of these are true, entry counts in both places)
 actor <- updated_pol_act_ath_death_age %>% filter(Actor==TRUE)
-politician <- updated_pol_act_ath_death_age %>% filter(Politician==TRUE)
+politician <- updated_pol_act_ath_death_age %>% filter(Politician==TRUE & death_age>10)
 athlete <- updated_pol_act_ath_death_age %>% filter(Athlete==TRUE)
 business <- updated_pol_act_ath_death_age %>% filter(Business_person==TRUE)
 
@@ -58,8 +58,9 @@ business_new <- business %>%
 
 bound_data <- bind_rows(actor_new, athlete_new, politician_new, business_new)
 
+
 #Violin plot for different causes of death 
-violin <- bound_data %>%
+violin <- bound_data_decade %>%
   filter(Cause_of_Death_cat == c("Accident", "Cancer", "Stroke", "Influenza/Pneumonia", "Heart disease")) %>%
   plot_ly(
     x= ~occupation_new,
@@ -106,3 +107,47 @@ ggplot(subset (bound_data, Cause_of_Death_cat %in% c("Accident", "Cancer", "Stro
   theme_classic() + 
   scale_fill_manual(values=c("#CC3300", "#33FFCC", "#FF66CC", "#E69F00", "#6666FF")) + 
   labs(x='Occupation', y='Count', fill='Cause of Death')
+
+#average age of death line plot
+line_plot_data <- bound_data %>%
+  group_by(birthYear) %>%
+  summarize(average_death_age = mean(death_age))
+
+ggplot(line_plot_data) +
+  geom_smooth(mapping = aes(x = birthYear, y = average_death_age)) + ylim(0,80) +
+  ggtitle("Average Age of Death by Birth Year") + xlab("Birth Year") + ylab("Average Age of Death")
+
+
+#animated plot with decades
+
+bound_data_decade <- bound_data %>%
+  mutate(
+    decade = 10*(floor(birthYear/10))
+  )
+
+
+violin_decade <- bound_data_decade %>%
+  plot_ly(
+    x= ~occupation_new,
+    y= ~death_age,
+    type = 'violin',
+    split = ~occupation_new,
+    frame = ~decade,
+    box = list(
+      visible = TRUE
+    ),
+    meanline = list(
+      visible = TRUE
+    )
+  ) %>%
+  layout(
+    xaxis = list(
+      title = "Occupation"
+    ),
+    yaxis = list(
+      title = "Age of death",
+      zeroline = FALSE
+    )
+  )
+
+ggplotly(violin_decade)

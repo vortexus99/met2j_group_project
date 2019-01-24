@@ -20,7 +20,7 @@ json_filtered = json_filter(json_raw, keys)
 #making a variable for occupation in the filtered json
 #the occupations we want to look for
 occupations = ["actor", "politician", "athlete", "musician", "sing", "songwriter", "prince", "senator"]
-athletes = ["player", "ball", "swimmer", "gymnist", "dancer", "cycl", "race", "sports"]
+athletes = ["player", "ball", "swimmer", "gymn", "dancer", "cycl", "race", "sports"]
 politics = ["senator", "parliament", "government", "politician", "governor", "minister", "mayor", "councilmember", "legislat"]
 business = ["executive", "business", "ceo", "cfo", "finance"]
 

@@ -37,7 +37,7 @@ updated_pol_act_ath_death_age <- subset(pol_act_ath_death_age, death_age>0)
 
 #make new datasets with actors, politicians or athletes (if two of these are true, entry counts in both places)
 actor <- updated_pol_act_ath_death_age %>% filter(Actor==TRUE)
-politician <- updated_pol_act_ath_death_age %>% filter(Politician==TRUE)
+politician <- updated_pol_act_ath_death_age %>% filter(Politician==TRUE & death_age>10)
 athlete <- updated_pol_act_ath_death_age %>% filter(Athlete==TRUE)
 business <- updated_pol_act_ath_death_age %>% filter(Business_person==TRUE)
 
@@ -56,7 +56,7 @@ politician_new <- politician %>%
   )
 business_new <- business %>%
   mutate(
-    occupation_new = "Business"
+    occupation_new = "Business person"
   )
 
 bound_data <- bind_rows(actor_new, athlete_new, politician_new, business_new)
@@ -68,7 +68,7 @@ violin <- bound_data %>%
     y= ~death_age,
     type = 'violin',
     split = ~occupation_new,
-    frame = ~birthYear,
+    #frame = ~birthYear,
     box = list(
       visible = TRUE
     ),
@@ -83,13 +83,15 @@ violin <- bound_data %>%
     yaxis = list(
       title = "Age of death",
       zeroline = FALSE
-    )
-  )
+    ),
+    title = 'Age of Death for Different Occupations'
+  ) 
+hide_legend(violin)
 
 ggplotly(violin)
 
 
-#making the pots by decade
+#making the plots by decade
 decades <- bound_data %>%
   mutate(
     decade = 10*floor(birthYear/10)

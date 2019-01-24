@@ -103,10 +103,10 @@ ggplot(subset (bound_data, Cause_of_Death_cat %in% c("Crime", "Disease", "Suicid
   facet_grid(occupation_new~.)
 #and as a barplot 
 ggplot(subset (bound_data, Cause_of_Death_cat %in% c("Accident", "Cancer", "Stroke", "Heart disease", "Influenza/Pneumonia"))) + 
-  geom_bar(aes(x=occupation_new, fill=Cause_of_Death_cat), stat='count', position = 'stack') +
+  geom_bar(aes(x=occupation_new, y=death_age, fill=Cause_of_Death_cat), stat='identity', position = 'dodge', width=0.8) +
   theme_classic() + 
   scale_fill_manual(values=c("#CC3300", "#33FFCC", "#FF66CC", "#E69F00", "#6666FF")) + 
-  labs(x='Occupation', y='Count', fill='Cause of Death')
+  labs(x='Occupation', y='Mean age of Death', fill='Cause of Death')
 
 #average age of death line plot
 line_plot_data <- bound_data %>%

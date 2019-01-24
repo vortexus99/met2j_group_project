@@ -41,17 +41,20 @@ business <- updated_pol_act_ath_death_age %>% filter(Business_person==TRUE)
 
 #plot the data
 violinplots <- ggplot() + 
-  geom_violin(data = actor, mapping = aes(x = "Actor", y = death_age, frame=birthYear), fill = "hotpink", stat = "ydensity", 
+  geom_violin(data = actor, mapping = aes(x = "Actor", y = death_age), fill = "hotpink", stat = "ydensity", 
               position = "dodge", trim = TRUE, draw_quantiles = c(0.25, 0.5, 0.75),
-              scale = "area", na.rm = FALSE, show.legend  = NA)# +
-   geom_violin(data = politician, mapping = aes(x = "Politicians", y = death_age), fill = "lightblue", stat = "ydensity", 
+              scale = "area", na.rm = FALSE, show.legend  = NA) +
+  geom_violin(data = politician, mapping = aes(x = "Politicians", y = death_age), fill = "lightblue", stat = "ydensity", 
                position = "dodge", trim = TRUE, draw_quantiles = c(0.25, 0.5, 0.75),
                scale = "area", na.rm = FALSE, show.legend = NA) +
-   geom_violin(data = athlete, mapping = aes(x = "Athlete", y = death_age), fill = "lightgreen", stat = "ydensity", 
+  geom_violin(data = athlete, mapping = aes(x = "Athlete", y = death_age), fill = "lightgreen", stat = "ydensity", 
                position = "dodge", trim = TRUE, draw_quantiles = c(0.25, 0.5, 0.75),
                scale = "area", na.rm = FALSE, show.legend = NA) +
-   ggtitle("Age of Death Distribution for Different Occupations") +
-   xlab("Occupation") + ylab("Age of death") 
+  geom_violin(data = business, mapping = aes(x = "Business_person", y = death_age), fill = "yellow", stat = "ydensity", 
+              position = "dodge", trim = TRUE, draw_quantiles = c(0.25, 0.5, 0.75),
+              scale = "area", na.rm = FALSE, show.legend = NA) +
+  ggtitle("Age of Death Distribution for Different Occupations") +
+  xlab("Occupation") + ylab("Age of death") 
   
 ggplotly(violinplots)
 

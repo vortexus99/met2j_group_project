@@ -60,7 +60,7 @@ bound_data <- bind_rows(actor_new, athlete_new, politician_new, business_new)
 
 #Plot for different causes of death 
 violin <- bound_data %>%
-  filter(Cause_of_Death_cat == c("Unknown", "Disease", "Crime")) %>%
+  filter(Cause_of_Death_cat %in% c("Cancer", "Stroke", "Accident", "Heart disease", "Influenza/Pneumonia")) %>%
   plot_ly(
     x= ~occupation_new,
     y= ~death_age,

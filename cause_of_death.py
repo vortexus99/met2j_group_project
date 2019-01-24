@@ -21,7 +21,8 @@ json_filtered = json_filter(json_raw, keys)
 #the occupations we want to look for
 occupations = ["actor", "politician", "athlete", "musician", "sing", "songwriter", "prince", "senator"]
 athletes = ["player", "ball", "swimmer", "gymnist", "dancer", "cycl", "race", "sports"]
-politics = ["senator", "parliament", "government", "politician"]
+politics = ["senator", "parliament", "government", "politician", "governor", "minister", "mayor", "councilmember", "legislat"]
+business = ["executive", "business", "ceo", "cfo", "finance"]
 
 #we look through the different variables that could contain the occupation
 #and make them into one variable 
@@ -50,18 +51,28 @@ for entry in json_filtered:
         if "occupation_label" in entry and "politician" not in Occupation_g and element in entry["occupation_label"].lower():
             Occupation_g.append("politician") 
         if "occupation" in entry and element in entry["occupation"].lower() and "politician" not in Occupation_g:
-            Occupation_g.append("athlete") 
+            Occupation_g.append("politician") 
         if "title" in entry and "politician" not in Occupation_g and element in entry["title"].lower():
             Occupation_g.append("politician") 
         if "rdf-schema#label" in entry and element in entry["rdf-schema#label"].lower() and "politician" not in Occupation_g:
             Occupation_g.append("politician") 
+    for element in business: 
+        if "occupation_label" in entry and "business person" not in Occupation_g and element in entry["occupation_label"].lower():
+            Occupation_g.append("business person") 
+        if "occupation" in entry and element in entry["occupation"].lower() and "business person" not in Occupation_g:
+            Occupation_g.append("business person") 
+        if "title" in entry and "business person" not in Occupation_g and element in entry["title"].lower():
+            Occupation_g.append("business person") 
+        if "rdf-schema#label" in entry and element in entry["rdf-schema#label"].lower() and "business person" not in Occupation_g:
+            Occupation_g.append("business person") 
 
 
 #selecting actors athletes and politicians 
 for entry in json_filtered:
     entry["Actor"]="actor" in entry["Occupation_g"]
     entry["Politician"]="politician" in entry["Occupation_g"]
-    entry["Athlete"]=element in entry["Occupation_g"]
+    entry["Athlete"]="athlete" in entry["Occupation_g"]
+    entry["Business_person"]="business person" in entry["Occupation_g"]
 
 with open("json_test.json",'w') as file:
     json.dump(json_filtered, file, indent=4)
@@ -75,6 +86,8 @@ for entry in json_filtered:
         actorspoliticiansathletes.append(entry) 
     elif entry["Athlete"]==True:
         actorspoliticiansathletes.append(entry) 
+    elif entry["Business_person"]==True:
+        actorspoliticiansathletes.append(entry)
 
 
 #seeing how many people have deathCause as entry 

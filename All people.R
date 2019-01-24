@@ -75,3 +75,37 @@ violin_all <- bound_data_decades %>%
 
 ggplotly(violin_all)
 
+
+violin <- bound_data %>%
+  filter(Cause_of_Death_cat %in% c("Cancer", "Stroke", "Influenza/Pneumonia", "Heart disease", "Accident")) %>%
+  plot_ly(
+    y= ~death_age,
+    type = 'violin',
+    split = ~Cause_of_Death_cat,
+    box = list(
+      visible = TRUE
+    ),
+    meanline = list(
+      visible = TRUE
+    )
+  ) %>%
+  layout(
+    xaxis = list(
+      title = "Cause of death"
+    ),
+    yaxis = list(
+      title = "Age of death",
+      zeroline = FALSE
+    )
+  )
+
+hide_legend(violin)
+
+ggplotly(violin)
+
+ggplot(subset (bound_data, Cause_of_Death_cat %in% c("Accident", "Cancer", "Stroke", "Heart disease", "Influenza/Pneumonia"))) + 
+  geom_bar(aes(x=Cause_of_Death_cat), stat='count', position = 'stack', color="lightblue", fill="darkblue") +
+  theme_classic() + 
+  scale_color_manual(values=c("#CC3300", "#33FFCC", "#FF66CC", "#E69F00", "#6666FF")) + 
+  labs(x='Cause of Death', y='Count')
+

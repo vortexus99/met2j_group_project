@@ -8,7 +8,7 @@ library('dplyr')
 library('RColorBrewer')
 
 #import data
-pol_act_ath_raw <- read.csv('D:/UCU/Labs/Intro to Data/met2j_group_project/actors_politicians_athletes_1900_1950.csv', stringsAsFactors = FALSE)
+pol_act_ath_raw <- read.csv('actors_politicians_athletes_1900_1950.csv', stringsAsFactors = FALSE)
 
 #make new dataframe so we don't change anything in raw
 pol_act_ath_date <- pol_act_ath_raw
@@ -26,6 +26,7 @@ pol_act_ath_death_age <- pol_act_ath_date %>%
     Actor = as.logical(Actor),
     Politician = as.logical(Politician),
     Athlete = as.logical(Athlete),
+    Business_person = as.logical(Business_person),
     birthYear = as.numeric(format(birthDate, format = "%Y"))
   )
 
@@ -36,6 +37,7 @@ updated_pol_act_ath_death_age <- subset(pol_act_ath_death_age, death_age>0)
 actor <- updated_pol_act_ath_death_age %>% filter(Actor==TRUE)
 politician <- updated_pol_act_ath_death_age %>% filter(Politician==TRUE)
 athlete <- updated_pol_act_ath_death_age %>% filter(Athlete==TRUE)
+business <- updated_pol_act_ath_death_age %>% filter(Business_person==TRUE)
 
 #plot the data
 violinplots <- ggplot() + 

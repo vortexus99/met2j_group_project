@@ -25,21 +25,19 @@ pol_act_ath_death_age <- pol_act_ath_date %>%
     Actor = as.logical(Actor),
     Politician = as.logical(Politician),
     Athlete = as.logical(Athlete),
-    birthYear = as.numeric(format(birthDate, format = "%Y"))
+    Business_person = as.logical(Business_person),
+    birthYear = as.numeric(format(birthDate, format = "%Y")),
+    Cause_of_Death_cat = as.factor(Cause_of_Death_cat)
   )
 
 #removes impossible values for death_age (like -2000) and entries without values (e.g. person stll alive)
 updated_pol_act_ath_death_age <- subset(pol_act_ath_death_age, death_age>0)
 
-#making cause of death into a factor
-updated_pol_act_ath_death_age$Cause_of_Death_cat <- as.factor(updated_pol_act_ath_death_age$Cause_of_Death_cat)
-print(levels(bound_data$Cause_of_Death_cat))
-
 #make new datasets with actors, politicians or athletes (if two of these are true, entry counts in both places)
 actor <- updated_pol_act_ath_death_age %>% filter(Actor==TRUE)
 politician <- updated_pol_act_ath_death_age %>% filter(Politician==TRUE)
 athlete <- updated_pol_act_ath_death_age %>% filter(Athlete==TRUE)
-
+business <- updated_pol_act_ath_death_age %>% filter(Business_person==TRUE)
 
 actor_new <- actor %>%
   mutate(
@@ -53,8 +51,12 @@ politician_new <- politician %>%
   mutate(
     occupation_new = "Politician"
   )
+business_new <- business %>%
+  mutate(
+    occupation_new = "Business"
+  )
 
-bound_data <- bind_rows(actor_new, athlete_new, politician_new)
+bound_data <- bind_rows(actor_new, athlete_new, politician_new, business_new)
 
 #Plot for different causes of death 
 violin <- bound_data %>%

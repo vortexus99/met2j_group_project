@@ -115,7 +115,17 @@ line_plot_data <- bound_data %>%
 
 ggplot(line_plot_data) +
   geom_smooth(mapping = aes(x = birthYear, y = average_death_age)) + ylim(0,80) +
-  ggtitle("Average Age of Death by Birth Year") + xlab("Birth Year") + ylab("Average Age of Death")
+  ggtitle("Average Age of Death by Birth Year") + xlab("Birth Year") + ylab("Average Age of Death") 
+
+#scatterplot
+
+ggplot() +
+  geom_point(data = bound_data, mapping = aes(x = birthYear, y = death_age, colour = occupation_new)) +
+  ggtitle("Death Age by Year of Birth") + xlab ("Birth Year") + ylab("Age of Death") + 
+  labs(colour = "Occupation") +
+  geom_smooth(data = line_plot_data, mapping = aes(x = birthYear, y = average_death_age)) + ylim(0,110) +
+  ggtitle("Age of Death by Birth Year") + xlab("Birth Year") + ylab("Age of Death")  +
+  theme_classic()
 
 
 #animated plot with decades
